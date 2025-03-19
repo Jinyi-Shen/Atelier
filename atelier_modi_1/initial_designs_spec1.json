@@ -1,0 +1,8 @@
+{
+    "NMC": "A capacitor connected between Node1 and NodeOutput.A capacitor connected between Node2 and NodeOutput",
+    "NGCC": "A capacitor connected between Node1 and NodeOutput.A capacitor connected between Node2 and NodeOutput.A POS_VCCS block connected between NodeInput and NodeOutput.A NEG_VCCS block connected between Node1 and NodeOutput",
+    "NMCF": "A capacitor connected between Node1 and NodeOutput.A capacitor connected between Node2 and NodeOutput.A NEG_VCCS block connected between Node1 and NodeOutput",
+    "DFCFC1": "A capacitor connected between Node1 and NodeOutput.A NEG_VCCS block connected between Node1 and NodeOutput.A DFC block connected at Node2",
+    "DFCFC2": "A capacitor connected between Node1 and NodeOutput.A NEG_VCCS block connected between Node1 and NodeOutput.A DFC block connected at Node1",
+    "IAC": "A capacitor connected between Node1 and NodeOutput.A NEG_VCCS block connected between Node1 and NodeOutput.A SRC block connected between Node2 and NodeGround"
+}

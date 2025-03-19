@@ -1,0 +1,121 @@
+[initial_selection_supplementary_knowledge]:{{
+---metric value---
+A gain requirement of 85dB is moderate, and a gain requirement of 110dB is high.
+A GBW requirement of 0.7MHz is moderate, and a GBW requirement of 5MHz is high.
+A power requirement of 125uW is moderate, and a power requirement of 25uW is strict.
+A C_L of 10pF is small, and a C_L of 1nF is large.
+
+---suitable design scenarios of different topologies---
+NMC: The NMC structure offers excellent gain but suffers from poor power efficiency. It delivers moderate performance in GBW/PM with a small load capacitance, but its performance with a large load capacitance is poor.
+MNMC: The MNMC structure provides excellent gain but has poor power efficiency. It performs well in GBW/PM with a small load capacitance and offers moderate performance with a large load capacitance.
+NGCC: The NGCC structure excels in both gain and power efficiency. However, it shows only moderate performance in GBW/PM with a small load capacitance and performs poorly with a large load capacitance.
+NMCF: The NMCF structure combines excellent gain with excellent power efficiency. It delivers good performance in GBW/PM with a small load capacitance and moderate performance with a large load capacitance.
+DFCFC1: The DFCFC1 structure is characterized by excellent gain and power efficiency. However, it performs poorly in GBW/PM with a small load capacitance but excels with a large load capacitance.
+DFCFC2: The DFCFC2 structure offers both excellent gain and power efficiency. Similar to DFCFC1, it performs poorly in GBW/PM with a small load capacitance but excels when handling a large load capacitance.
+IAC: IAC is not suitable for driving large C_L while maintaining low power consumption.
+NGRNMC: NGRNMC is suitable for driving relatively small C_L, providing good GBW and PM with low power consumption.
+}}
+
+[circuit_analysis_supplementary_knowledge]:{{
+---op-amp decomposition knowledge---
+A three-stage op-amp consists of three amplification stages: the first amplification stage G_in_1, the second amplification stage G_1_2, and the third amplification stage G_2_vo.
+A three-stage op-amp also consists of five circuit nodes: NodeInput, Node1, Node2, NodeOutput, and NodeGround. 
+For the three amplification stages:
+G_in_1 connects Node Input and Node1.
+G_1_2 connects Node1 and Node2.
+G_2_vo connects Node2 and Node Output.
+For the five circuit nodes:
+NodeInput is the input node, also the input of the first amplification stage. 
+NodeOutput is the output node, also the output of the third amplification stage.
+Node1 is the output of the first amplification stage, also the input of the second amplification stage.
+Node2 is the output of the second amplification stage, also the input of the third amplification stage.
+NodeGround is the ground node.
+
+---op-amp SPICE netlist format---
+.subckt opamp NodeInput NodeOutput NodeGround
+*main amplification stages and associated parasitics
+G_in_1 Node1 NodeGround NodeInput NodeGround G_in_1
+Rprs_in_1 Node1 NodeGround 'Rprs_in_1/G_in_1'
+G_1_2 Node2 NodeGround Node1 NodeGround '-1*G_1_2'
+Rprs_1_2 Node2 NodeGround 'Rprs_1_2/G_1_2'
+Cprsin_1_2 Node1 NodeGround 'G_1_2/6.28*5n'
+G_2_out NodeOutput NodeGround Node2 gnd G_2_out
+Rprs_2_out NodeOutput NodeGround 'Rprs_2_out/G_2_out'
+Cprsin_2_out Node2 NodeGround 'G_2_out/6.28*5n'
+*loads
+C_L NodeOutput NodeGround [C_L_value]
+R_L NodeOutput NodeGround [R_L_value]
+*compensation structure
+.ends
+
+
+---SPICE netlist explanation---
+Each line in the SPICE netlist is composed of several sections that are split by space. The first section is the component name. The last section is the component value. The remaining middle sections are the nodes that components are connected to.
+G refers to voltage-controlled current sources (VCCSs).
+R refers to resistors.
+C refers to capacitors.
+The lines that start with "*" are comments.
+
+---SPICE netlist line format---
+For a POS_VCCS connected between [NodeA] and [NodeB], it is converted into three netlist lines. The first line is "G_[NodeA]_[NodeB] [NodeB] NodeGround [NodeA] NodeGround '-1*G_[NodeA]_[NodeB]'". The second line is "Rprs_[NodeA]_[NodeB] [NodeB] NodeGround 'Rprs_[NodeA]_[NodeB]/G_[NodeA]_[NodeB]". The third line is "Cprsin_[NodeA]_[NodeB] [NodeA] NodeGround 'G_[NodeA]_[NodeB]/6.28*5n'".
+
+For a NEG_VCCS connected between [NodeA] and [NodeB], it is converted into three netlist lines. The first line is "G_[NodeA]_[NodeB] [NodeB] NodeGround [NodeA] NodeGround G_[NodeA]_[NodeB]". The second line is "Rprs_[NodeA]_[NodeB] [NodeB] NodeGround 'Rprs_[NodeA]_[NodeB]/G_[NodeA]_[NodeB]". The third line is "Cprsin_[NodeA]_[NodeB] [NodeA] NodeGround 'G_[NodeA]_[NodeB]/6.28*5n'".
+
+For a resistor connected between [NodeA] and [NodeB], its netlist line is "R_[NodeA]_[NodeB] [NodeA] [NodeB] R_[NodeA]_[NodeB]".
+For a capacitor connected between [NodeA] and [NodeB], its netlist line is "C_[NodeA]_[NodeB] [NodeA] [NodeB] C_[NodeA]_[NodeB]".
+
+
+---SPICE netlist conversion based on [current_netlist_description]---
+The op-amp SPICE netlist format is incomplete and you should complete it.
+The part of "main amplification stages and associated parasitics" should not be revised. 
+The [C_L_value] and [R_L_value] in the part of "loads" should be replaced by the values in the provided [desired_metrics].
+The part of "compensation structure" should be added based on the provided [current_netlist_description]. 
+Each sentence in the [current_netlist_description] describes the component connections between a pair of circuit nodes in natural language.
+You should first convert each sentence to the SPICE netlist format, and then concatenate the netlists of all sentences to get the complete netlist of the "compensation structure".
+The generated netlist should only contain netlist lines converted from the [current_netlist_description].
+You should not add any extra sentence to the descriptions.
+You should not add any extra line to the generated netlist.
+The components in different sentences can have the same names, but they are different components. 
+When converting a sentence into the SPICE netlist, if the sentence includes a SRC block, the SRC block should be first converted into components. To be specific, a SRC block connected between [NodeA] and [NodeB] contains a resistor and a capacitor. An extra node named [NodeA]_[NodeB] should be added to describe the serial connection of the resistor and the capacitor. The resistor is connected between [NodeA] and [NodeA]_[NodeB]. The capacitor is connected between [NodeA]_[NodeB] and [NodeB]. [NodeA]_[NodeB] is a newly added node.
+When converting a sentence into the SPICE netlist, if the sentence includes a DFC block, the DFC block should be first converted into components. To be specific, a DFC block connected at [NodeA] contains two components: a NEG_VCCS and a capacitor. The NEG_VCCS is connected between [NodeA] and [NodeA]_mid. The capacitor is connected between [NodeA]_mid and [NodeA]. [NodeA]_mid is a newly added node. Note that the NEG_VCCS should be converted to three netlist lines following the "---SPICE netlist line format---".
+Then you should strictly follow the above "SPICE netlist line format" to generate netlist lines, which means you should set the component names and parameter names according to the provided format.
+You should only replace all placeholders by the names of circuit nodes in the provided [current_netlist_description].
+You must not revise any other contents except placeholders.
+The node names in the examples may differ from those in the descriptions. You should learn to change the names to align with the descriptions.
+All sections in squared brackets "[]" in the above context are placeholders, such as [NodeA] and [NodeB].
+
+---tunable parameter knowledge---
+The name of variables in the last section of netlist lines are tunable parameters.
+For example, "G_in_1" is a tunable parameter in the line "G_in_1 Node1 NodeGround NodeInput NodeGround G_in_1".
+"Rprs_in_1" and "G_in_1" are tunable parameters in the line "Rprs_in_1 Node1 NodeGround 'Rprs_in_1/G_in_1'".
+}}
+
+[scheme_selection_supplementary_knowledge]:{{
+If the [Number of Topology Modification] is no less than 3, you should chooose "end".
+Elif the [Current Scheme] is "circuit analysis", you should choose "parameter tuning".
+Elif the [Current Scheme] is "parameter tuning", you should choose "topology modification".
+Elif the [Current Scheme] is "topology modification", you should choose "circuit analysis".
+}}
+
+[parameter_tuning_supplementary_knowledge]:{{
+For each parameter in the tunable parameters: if the parameter name starts with "G", the parameter range is [1e-5, 1e-3]; elif the parameter name starts with "Rprs", the parameter range is [40, 80]; elif the parameter name starts with "R_", the parameter range is [1e4, 1e6]; elif the parameter name starts with "C", the parameter range is [1e-13, 5e-12].
+}}
+
+[topology_modification_supplementary_knowledge]:{{
+---impact of compensation paths on circuit performance---
+A capacitor connected between Node1 and NodeOutput does not affect gain and power, increases PM, and decreases GBW.
+A capacitor connected between Node2 and NodeOutput does not affect gain and power, increases PM, and decreases GBW.
+A SRC block connected between Node1 and NodeOutput does not affect gain and power, but increases GBW and PM.
+A SRC block connected between Node2 and NodeOutput does not affect gain and power, but increases GBW and PM.
+A SRC block connected between Node2 and NodeGround does not affect gain and power, but increases GBW and PM at large C_L.
+A NEG_VCCS block connected between Node1 and NodeOutput increases gain, GBW, PM, and power.
+A POS_VCCS block connected between NodeInput and NodeOutput increases gain, GBW, PM, and power.
+A NEG_VCCS block connected between NodeInput and Node2 increases gain, GBW, PM, and power.
+A DFC block connected at Node1 does not affect gain and power, but increases GBW and PM at large C_L.
+A DFC block connected at Node2 also does not affect gain and power, but increases GBW and PM at large C_L.
+---
+
+---rules for modification selection---
+Select a modification from the [Options] based on the comparison between the [Current Performance Metrics] and the [Required Performance Metrics] according to the "impact of compensation paths on circuit performance". If not all performance metrics are met, select a modification that have the largest probability to improve the underperforming metrics. If all performance metrics are met, select a modification that have the largest probability to increase GBW and decrease PM while still satisfying all performance constraints.
+---
+}}
