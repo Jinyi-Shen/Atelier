@@ -10,6 +10,4 @@ This is the code repository for our proposed method ATOM that accompanys our pap
 
 ## Running Experiments
 
-The code related to opamp design is under ```./atelier/```. Start the optimization for spec1 with
-
-```./run.sh```
+The code related to opamp design is under ```./atelier/```. Start the optimization for spec1 with ```./run.sh```.
