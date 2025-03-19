@@ -25,7 +25,7 @@ from prompt_v5 import (
 from dpagent.agents.Planning.dfs.Debugger.utils.parser import (
     parse_input_file
 )
-from atelier_modi_1.sizing.sizing_spec1 import *
+from atelier.sizing.sizing_spec1 import *
 import json
 import re
 import pickle

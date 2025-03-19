@@ -17,7 +17,6 @@ def get_llm(inc=agentMdlCfg.default['inc'], model_name=agentMdlCfg.default['mode
         llm = ChatOpenAI(
             temperature=0.95,
             model="glm-4-0520",
-            #model="glm-4-air",
             openai_api_key="",#replace with your ZhipuAI key
             openai_api_base="https://open.bigmodel.cn/api/paas/v4/",
             max_tokens=10000

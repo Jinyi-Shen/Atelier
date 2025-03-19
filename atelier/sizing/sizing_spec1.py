@@ -6,15 +6,10 @@ os.environ['OPENBLAS_NUM_THREADS'] = str(cpu_lim)
 os.environ['MKL_NUM_THREADS'] = str(cpu_lim)
 os.environ['VECLIB_MAXIMUM_THREADS'] = str(cpu_lim)
 os.environ['NUMEXPR_NUM_THREADS'] = str(cpu_lim)
-#os.environ["CUDA_VISIBLE_DEVICES"] = '1'
-# import ray
 import autograd.numpy as np
 import torch
 import time
-# import igraph
 import pickle
-#from src.util import *
-#from src.BO import BO
 import re
 import math
 import cma
