@@ -1,6 +1,6 @@
 # Atelier: An Automated Analog Circuit Design Framework via Multiple Large Language Model-based Agents
 
-This is the code repository for our proposed method ATOM that accompanys our paper Atelier: An Automated Analog Circuit Design Framework via Multiple Large Language Model-based Agents, which has been submitted to IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems.
+This is the code repository for our proposed method Atelier that accompanys our paper Atelier: An Automated Analog Circuit Design Framework via Multiple Large Language Model-based Agents, which has been accepted by IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems 2025.
 
 ## Prerequisites and Dependencies
 
